@@ -5,7 +5,7 @@
 - **Focus** — LLM systems that have to be *right*: retrieval grounding, hallucination detection, provenance, evaluation harnesses
 - **Also** — multi-tenant backends, async job pipelines, TypeScript / Python / Node APIs
 - **Education** — B.S. Computer Science, University of North Texas · Expected 2028
-- **Links** — [LinkedIn]([‹LINKEDIN-URL›](https://www.linkedin.com/in/long-thien-ngo/)) · [Resume](file:///C:/Users/Crack/Downloads/Jack_Ngo_Software_Engineer_Intern.pdf) · [jackngo2312@gmail.com](mailto:crackerjack2312@gmail.com)
+- **Links** — [LinkedIn](https://www.linkedin.com/in/long-thien-ngo/) · [Resume](resume.pdf) · [jackngo2312@gmail.com](mailto:jackngo2312@gmail.com)
 
 <sub>`Python` · `TypeScript` · `Node.js` · `FastAPI` · `Express` · `React` · `LangGraph` · `SQLite` · `PostgreSQL` · `ChromaDB` · `Ollama` · `Docker`</sub>
 
@@ -81,7 +81,7 @@ The part I'd point at first: every extracted value carries a verbatim source quo
 
 `TypeScript` `Node.js` `Express 5` `SQLite (WAL)` `Ollama` `Qwen2.5-7B` `Tesseract OCR` `pdf.js` `React 19` `MUI` `Zustand`
 
-[**Repo**](https://github.com/longngo2312/LongMentorshipSummer2026CPI/tree/main/DocumentExtraction) · [**Design docs**](https://github.com/longngo2312/LongMentorshipSummer2026CPI/tree/main/DocumentExtraction/docs)<!-- TODO: add · [**Live demo**](url) -->
+[**Repo**](https://github.com/longngo2312/LongMentorshipSummer2026CPI/tree/main/DocumentExtraction) · [**Design docs**](https://github.com/longngo2312/LongMentorshipSummer2026CPI/tree/phase2/DocumentsEndpointAndParsing/DocumentExtraction/docs)<!-- TODO: add · [**Live demo**](url) -->
 
 ---
 
@@ -107,8 +107,7 @@ Cross-platform React Native app on Expo with Supabase for auth, Postgres, and ro
 |---|---|---|
 | [YouTube Trending VN](https://github.com/longngo2312/YoutubeTrendingVN) | Trending-video dashboard for Vietnam; server-side caching keeps it inside the YouTube API's 10k unit/day free quota and off the client's key | React · Express · MongoDB |
 | [Syllabus Scheduler](https://github.com/longngo2312/SyllabusScheduler) | Parses a course syllabus into a semester calendar of assignments and exams | React · Vite |
-| [Backend API Sandbox](https://github.com/longngo2312/Backend-API-Sandbox) | REST API practice ground — routing, validation, MongoDB modeling | Node.js · Express · MongoDB |
 
 ---
 
-<sub>Currently looking for **`‹TERM›` SWE internships** — backend, applied AI/ML infrastructure.</sub>
+<sub>Currently looking for **Summer 2027 SWE internships** — backend, applied AI/ML infrastructure.</sub>
