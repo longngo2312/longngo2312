@@ -5,7 +5,7 @@
 - **Focus** — LLM systems that have to be *right*: retrieval grounding, hallucination detection, provenance, evaluation harnesses
 - **Also** — multi-tenant backends, async job pipelines, TypeScript / Python / Node APIs
 - **Education** — B.S. Computer Science, University of North Texas · Expected `‹GRAD TERM›`
-- **Links** — [LinkedIn](‹LINKEDIN-URL›) · [Resume](‹RESUME-PDF-URL›) · [crackerjack2312@gmail.com](mailto:crackerjack2312@gmail.com)
+- **Links** — [LinkedIn]([‹LINKEDIN-URL›](https://www.linkedin.com/in/long-thien-ngo/)) · [Resume](file:///C:/Users/Crack/Downloads/Jack_Ngo_Software_Engineer_Intern.pdf) · [jackngo2312@gmail.com](mailto:crackerjack2312@gmail.com)
 
 <sub>`Python` · `TypeScript` · `Node.js` · `FastAPI` · `Express` · `React` · `LangGraph` · `SQLite` · `PostgreSQL` · `ChromaDB` · `Ollama` · `Docker`</sub>
 
