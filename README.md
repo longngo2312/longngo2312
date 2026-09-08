@@ -1,4 +1,4 @@
-# Long Ngo
+# Jack Ngo
 
 **Backend & Applied-AI Engineering**
 
