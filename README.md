@@ -5,9 +5,53 @@
 - **Focus** — LLM systems that have to be *right*: retrieval grounding, hallucination detection, provenance, evaluation harnesses
 - **Also** — multi-tenant backends, async job pipelines, TypeScript / Python / Node APIs
 - **Education** — B.S. Computer Science, University of North Texas · Expected 2028
-- **Links** — [LinkedIn](https://www.linkedin.com/in/long-thien-ngo/) · [Resume](resume.pdf) · [jackngo2312@gmail.com](mailto:jackngo2312@gmail.com)
+- **Links** — [Portfolio](https://longngo.dev) · [LinkedIn](https://www.linkedin.com/in/long-thien-ngo/) · [Resume](resume.pdf) · [jackngo2312@gmail.com](mailto:jackngo2312@gmail.com)
 
-<sub>`Python` · `TypeScript` · `Node.js` · `FastAPI` · `Express` · `React` · `LangGraph` · `SQLite` · `PostgreSQL` · `ChromaDB` · `Ollama` · `Docker`</sub>
+<sub>`Python` · `TypeScript` · `Node.js` · `FastAPI` · `Express` · `React` · `LangGraph` · `SQLite` · `PostgreSQL` · `ChromaDB` · `Qdrant` · `Ollama` · `Docker`</sub>
+
+---
+
+## ⭐ DocExtract — Document Extraction & Cited Q&A
+
+> Turns PDFs, scans and Office files into structured data for teams whose documents can't leave their network. The model has to cite a verbatim quote for every value it extracts, a person accepts each value before it's indexed, and then you can ask questions across everything that's been reviewed and get cited answers.
+
+<p align="center"><img src="assets/docextract-review.png" alt="DocExtract review screen: a syllabus PDF with the cited passage highlighted, extracted fields with confidence and accept/edit/reject controls" width="900"></p>
+
+```mermaid
+flowchart TB
+    U["Upload<br/>PDF · scan · DOCX · XLSX · PPTX"] --> API["Express API<br/>returns in ms"]
+    API --> Q[("Durable job queue<br/>atomic claim via<br/>UPDATE … RETURNING")]
+    Q --> W["Worker<br/>retries · crash recovery"]
+
+    W --> PA["Parse<br/>text layer + Tesseract OCR"]
+    PA --> SP["Emit spans<br/>char offsets + page bboxes"]
+    PA --> EX["Extract<br/>local 7B via Ollama<br/>schema-constrained JSON"]
+
+    EX --> QV{"Quote exists<br/>verbatim in text?"}
+    QV -->|no| FL["Flagged: unverifiable"]
+    QV -->|yes| J["Grounding judge<br/>sees only question+answer+quote,<br/>never the document"]
+
+    J --> RV["Human review<br/>click-to-highlight in original"]
+    FL --> RV
+    RV -->|accepted| DB[("Per-tenant SQLite")]
+    RV -->|accepted| IX["Chunk + embed<br/>nomic-embed-text → Qdrant"]
+
+    C["Chat question"] --> RT{"Router"}
+    RT -->|facts| DB
+    RT -->|passages| IX
+    DB --> AN["Answer<br/>citations verified server-side"]
+    IX --> AN
+```
+
+**Multi-tenant by construction.** Each user's data lives in its own SQLite file, so data can't leak between tenants through a bad query because they never share one. Ingestion runs behind a durable job queue with single-statement atomic claims, bounded retries, and recovery on startup for jobs a crash left behind. Uploads return in milliseconds even though extraction takes about two minutes. A quantized 7B model runs locally within 6 GB of VRAM: **$0 inference cost per document, and no document leaves the network.**
+
+**Every value is grounded.** Each extracted value carries a verbatim source quote. The server checks that the quote really exists in the parsed text and maps it to character positions and page coordinates, so a reviewer clicks straight to the highlighted passage. A second, separate model then judges whether the quote actually *supports* the answer. It only sees the question, the answer and the quote, never the document, so it can't justify an answer with text that wasn't cited.
+
+**Q&A only over reviewed data.** Nothing reaches the vector index until a human has accepted it. Re-reviewing a document re-indexes it, and deleting one removes its vectors. A router sends each question to SQL over reviewed field values, to vector search over passages, or to both. Every citation is checked on the server before the answer reaches the browser, and if the documents don't cover a question, the assistant says so instead of guessing.
+
+`TypeScript` `Node.js` `Express 5` `SQLite (WAL)` `Ollama` `Qwen2.5-7B` `nomic-embed-text` `Qdrant` `Tesseract OCR` `pdf.js` `React 19` `MUI` `Zustand` `Docker` `nginx`
+
+[**Live demo**](https://docextract-jackngo.dev) · [**Repo**](https://github.com/longngo2312/DocumentExtraction) · [**Design docs**](https://github.com/longngo2312/DocumentExtraction/tree/main/docs)
 
 ---
 
@@ -49,39 +93,6 @@ Built a LangGraph agent over a hybrid retrieval pipeline — dense vector search
 `Python` `LangGraph` `FastAPI` `Google Gemini` `ChromaDB` `BM25` `bge-reranker-v2-m3` `RAGAS-style eval`
 
 [**Repo**](https://github.com/longngo2312/AgenticRagDotB) · [**Architecture & eval notes**](https://github.com/longngo2312/AgenticRagDotB#architecture)<!-- TODO: add · [**Live demo**](url) once deployed -->
-
----
-
-## Document Extraction Platform
-
-> Turns unstructured documents into reviewable structured data for teams whose documents can't leave their network — the model must cite a verbatim quote for every value it extracts, and a human accepts it before anything is indexed.
-
-```mermaid
-flowchart TB
-    U["Upload<br/>PDF · scan · DOCX · XLSX · PPTX"] --> API["Express API<br/>returns in ms"]
-    API --> Q[("Durable job queue<br/>atomic claim via<br/>UPDATE … RETURNING")]
-    Q --> W["Worker<br/>retries · crash recovery"]
-
-    W --> PA["Parse<br/>text layer + Tesseract OCR"]
-    PA --> SP["Emit spans<br/>char offsets + page bboxes"]
-    PA --> EX["Extract<br/>local 7B via Ollama<br/>schema-constrained JSON"]
-
-    EX --> QV{"Quote exists<br/>verbatim in text?"}
-    QV -->|no| FL["Flagged: unverifiable"]
-    QV -->|yes| J["Grounding judge<br/>sees only question+answer+quote,<br/>never the document"]
-
-    J --> RV["Human review<br/>click-to-highlight in original"]
-    FL --> RV
-    RV -->|accepted| DB[("Per-tenant SQLite<br/>+ vector index")]
-```
-
-Built a multi-tenant TypeScript/Express platform where each customer's data lives in its own SQLite file, so cross-tenant leakage is removed by construction rather than defended against in query logic. Ingestion runs behind a durable job queue with single-statement atomic claims, bounded retries, and startup recovery for jobs orphaned by a crash — uploads return in milliseconds against a ~2-minute extraction. Extraction runs a quantized 7B model locally inside a 6 GB VRAM budget: **$0 per-document inference cost, and no document leaves the network.**
-
-The part I'd point at first: every extracted value carries a verbatim source quote that the server verifies exists in the parsed text, resolved to character offsets and page coordinates so a reviewer clicks straight to the highlighted passage. A second isolated pass then judges whether the quote actually *supports* the answer — it receives only the question, answer, and quote, never the document, so it is structurally unable to justify a conclusion from uncited context.
-
-`TypeScript` `Node.js` `Express 5` `SQLite (WAL)` `Ollama` `Qwen2.5-7B` `Tesseract OCR` `pdf.js` `React 19` `MUI` `Zustand`
-
-[**Repo**](https://github.com/longngo2312/LongMentorshipSummer2026CPI/tree/main/DocumentExtraction) · [**Design docs**](https://github.com/longngo2312/LongMentorshipSummer2026CPI/tree/phase2/DocumentsEndpointAndParsing/DocumentExtraction/docs)<!-- TODO: add · [**Live demo**](url) -->
 
 ---
 
