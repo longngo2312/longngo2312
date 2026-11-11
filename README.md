@@ -1,6 +1,6 @@
 # Jack Ngo
 
-**Backend & Applied-AI Engineering**
+**Full Stack Software Engineer**
 
 - **Focus** — LLM systems that have to be *right*: retrieval grounding, hallucination detection, provenance, evaluation harnesses
 - **Also** — multi-tenant backends, async job pipelines, TypeScript / Python / Node APIs
